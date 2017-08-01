@@ -1,0 +1,137 @@
+#!/bin/bash
+indirectory=1
+echo ' ______________ _____________ '
+echo ' \__    ___/   |   \______   \'
+echo '   |    | /    ~    \     ___/'
+echo '   |    | \    Y    /    |    '
+echo '   |____|  \___|_  /|____|    '
+echo '                 \/           '
+echo "Transparent Hardware Platform "
+echo 'PoC from "Untrustworthy Hardware and How to Fix It"'
+echo "ver1.0 notice - indev"
+echo "WIP - Propeller not currently functional"
+function menu {
+	echo "┌─────────────────────────────────────────┐"
+	echo "│ $(tput bold)[d]$(tput sgr0)ownload dependencies                 │"
+	echo "│ $(tput bold)[l]$(tput sgr0)oad bitstream to DE0-Nano            │"
+	echo "│ $(tput bold)[b]$(tput sgr0)uild OpenRISC bitstream for DE0-Nano │"
+	echo "│ $(tput bold)[w]$(tput sgr0)rite GNU/Linux to memory             │"
+	echo "│ $(tput bold)[p]$(tput sgr0)rogram Propeller                     │"
+	echo "│ $(tput bold)[h]$(tput sgr0)ardware setup guide                  │"
+	echo "│ $(tput bold)[q]$(tput sgr0)uit                                  │"
+	echo "└─────────────────────────────────────────┘"
+	read -r -sn1 key
+	case "$key" in
+		[dD]) download;;
+		[lL]) load;;
+		[bB]) fusesoc;;
+		[wW]) openocd;;
+		[pP]) propeller;;
+		[hH]) hardwaresetup;;
+		[qQ]) exit;;
+	esac
+}
+function download {
+	printf "name a directory for tools to be downloaded to >> "
+	read directory
+	mkdir $directory && cd $directory
+	indirectory=0
+	echo "installing OpenRISC tools"
+	git clone https://github.com/openrisc/tutorials >> /dev/null
+	echo "done"
+	sleep 0.25
+	echo "installing Propeller Tools"
+	git clone https://github.com/tdoylend/tgi2 >> /dev/null
+	echo "done"
+	sleep 0.25
+	echo "installing Parallax tools"
+	sudo apt-get install g++ >>/dev/null
+	git clone  https://github.com/parallaxinc/OpenSpin >> /dev/null
+	git clone  https://github.com/parallaxinc/PropLoader >> /dev/null
+	echo "done"
+	mv tutorials openrisc
+	cd openrisc && ./bootstrap-quick-start.sh
+	source enviroment.sh
+	fusesoc init
+	cd ..
+	echo "Done"
+	echo "$(tput bold)<!> WARNING <!>$(tput sgr0) in addition, you will need to install the Quartus FPGA tools from Altera"
+	echo "this code was tested with Altera Quartus Prime lite 17.1 - the latest version should work as well"
+	echo "please install the tools within the folder you have created for the rest of the project"
+	echo "download the tools here: $(tput bold)dl.altera.com/?edition=lite$(tput sgr0)"
+	echo "Altera/Intel require you to create an account and fill out some personal information, but they don't check it for validity in any way so no worries about dropping your dox"
+	menu
+
+}
+function load {
+	printf "state the full path to where you installed the Quartus tools (e.g. /home/username/projectfolder/intelFPGA_lite/17.0/quartus/bin) >> "
+	read $pathtotools
+	export PATH=$PATH:$pathtotools
+	if [[ $indirectory == "1" ]]; then
+		printf "where have you installed the rest of the tools? >> "
+		read directory
+		cd $directory
+		indirectory=0
+	fi
+	source /openrisc/enviroment.sh
+	printf "have you built the OpenRISC bitstream (y/n) >> "
+	read bitstreambuilt
+	if [[ $bitstreambuilt == "n" ]]; then
+		cd openrisc/de0_nano
+		fusesoc build de0_nano
+		cd ../ && cd ../
+	fi
+	printf "connect your DE0-Nano over USB and press [enter] to continue"
+	read
+	killall jtagd
+	echo "you should see the green LED labeled $(tput bold)load$(tput sgr0) on your FPGA light up if everything is working properly"
+	quartus_pgm --mode=jtag -o p\;openrisc/de0_nano/build/de0_nano/bld-quartus/de0_nano.sof
+	echo "the default LED pattern should not be active if everything loaded correctly"
+	menu
+}
+function build {
+	printf "state the full path to where you installed the Quartus tools (e.g. /home/username/projectfolder/intelQuartus"
+        read $pathtotools
+        export PATH=$PATH:$pathtotools
+	if [[ $indirectory == "1" ]]; then
+                printf "where have you installed the rest of the tools? >> "
+                read directory
+                cd $directory
+		indirectory=1
+        fi
+	source /openrisc/enviroment.sh
+	cd openrisc/de0_nano
+        fusesoc build de0_nano
+        cd ../ && cd ../
+	menu
+}
+function openocd {
+        if  [[ $indirectory == "1" ]]; then
+                printf "where have you installed the rest of the tools? >> "
+                read directory
+                cd $directory
+		indirectory=1
+        fi
+        source /openrisc/enviroment.sh
+        printf "state the path to a custom OpenRISC Linux image (build with OpenADK) or ignore this step and use the prebuilt image >> "
+	read "pathtoimage"
+	if [[ $pathtoimage == "" ]]; then
+		'openrisc/vmlinux'=pathtoimage
+	fi
+	echo "you should still have your DE0-Nano connected from loading the bitstream"
+	echo "$(tput bold)Starting OpenOCD server in a background process$(tput sgr0)"
+        screen -d -m -S OCD bash -c 'openocd -s ${OPENOCD}/share/openocd/scripts/ -f interface/altera-usb-blaster.cfg -f ../or1k-dev.tcl '
+	echo "halting the CPU and loading the Linux image (this may take some time)"
+	{ sleep 5; echo "init" ; sleep 1; echo "reset" ; sleep 1; echo "halt" ; sleep 1; echo "load_image $pathtoimage" ; sleep 180; echo "reg r3 0"; sleep 1; echo "reg npc 0x100" ; sleep 1; echo "resume" ; sleep 2; } | telnet localhost 4444 >> /dev/null
+	echo "$(tput bold)you should see linux booting on the TFT screen!$(tput sgr0)"
+	menu
+}
+function hardwaresetup {
+	echo "WIP"
+	menu
+}
+function propeller {
+	echo "WIP"
+	menu
+}
+menu
