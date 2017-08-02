@@ -26,3 +26,23 @@ Buildscript currently does not support programming the Parallax Propeller; will 
 - M2.5 standoff kit (for general assembly)
 - 3.3v FTDI-compatible serial interface (for debugging)
 - Access to a 3d-printer ~20-30 hours total print time (depending on quality / printer specs) 
+
+# Further Reading and Additional Resources (from slide deck)
+- DEF CON 22: Summary of Attacks Against BIOS and Secure Boot: https://www.youtube.com/watch?v=QDSlWa9xQuA
+- DEF CON XX: Hardware Backdooring is Practical: https://www.youtube.com/watch?v=8Mb4AiZ51Yk
+- NSA shipment hijacking: http://www.theverge.com/2013/12/29/5253226/nsa-cia-fbi-laptop-usb-plant-spy
+- Windows “golden keys” leaked: https://arstechnica.com/security/2016/08/microsoft-secure-boot-firmware-snafu- leaks-golden-key/
+- NSA Cisco implant: https://arstechnica.com/tech-policy/2014/05/photos-of-an-nsa-upgrade-factory-show-cisco- router-getting-implant/
+- Apple suspects hardware backdoors by state actors in server shipments: https://www.extremetech.com/extreme/ 225524-apple-may-design-its-own-servers-to-avoid-government-snooping
+- NSA deploys low level / hardware backdoors against intercepted consumer devices: http://www.extremetech.com/ computing/173721-the-nsa-regularly-intercepts-laptop-shipments-to-implant-malware-report-says
+- Summary of Intel ME: https://boingboing.net/2016/06/15/intel-x86-processors-ship-with.html
+- Detailed IME breakdown by Libreboot team: https://libreboot.org/faq/#intel
+- REcon 2014: Intel Management Engine Secrets (Igor Skochinsky): https://www.youtube.com/watch?v=4kCICUPc9_8
+- Hackaday: The Trouble with Intel’s Management Engine: http://hackaday.com/2016/01/22/the-trouble-with-intels- management-engine/
+- Hackaday IME workarounds: https://hackaday.com/2016/11/28/neutralizing-intels-management-engine/
+- A2: Malicious Analog Hardware: https://www.ieee-security.org/TC/SP2016/papers/0824a018.pdf
+- Wired Summary of silicon backdooring: https://www.wired.com/2016/06/demonically-clever-backdoor-hides-inside- computer-chip/
+- Power-based side channel attacks: https://www.rsaconference.com/writable/presentations/file_upload/br-w03- watt-me-worry-analyzing-ac-power-to-find-malware.pdf
+- openRISC homepage: http://openrisc.io/
+- getting started with openRISC: https://github.com/openrisc/tutorials
+- open source Propeller terminal using Adafruit 2.8” TFT: https://github.com/tdoylend/tgi2
