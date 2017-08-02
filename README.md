@@ -34,7 +34,7 @@ Buildscript currently does not support programming the Parallax Propeller; will 
 - Windows “golden keys” leaked: https://arstechnica.com/security/2016/08/microsoft-secure-boot-firmware-snafu-leaks-golden-key/
 - NSA Cisco implant: https://arstechnica.com/tech-policy/2014/05/photos-of-an-nsa-upgrade-factory-show-cisco-router-getting-implant/
 - Apple suspects hardware backdoors by state actors in server shipments: https://www.extremetech.com/extreme/225524-apple-may-design-its-own-servers-to-avoid-government-snooping
-- NSA deploys low level / hardware backdoors against intercepted consumer devices: http://www.extremetech.com/ computing/173721-the-nsa-regularly-intercepts-laptop-shipments-to-implant-malware-report-says
+- NSA deploys low level / hardware backdoors against intercepted consumer devices: http://www.extremetech.com/computing/173721-the-nsa-regularly-intercepts-laptop-shipments-to-implant-malware-report-says
 - Summary of Intel ME: https://boingboing.net/2016/06/15/intel-x86-processors-ship-with.html
 - Detailed IME breakdown by Libreboot team: https://libreboot.org/faq/#intel
 - REcon 2014: Intel Management Engine Secrets (Igor Skochinsky): https://www.youtube.com/watch?v=4kCICUPc9_8
